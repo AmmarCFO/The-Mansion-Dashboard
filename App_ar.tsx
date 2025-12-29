@@ -148,7 +148,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   const [activeScenarioId, setActiveScenarioId] = useState<string>(SCENARIOS[0].id);
   const [activeCase, setActiveCase] = useState<CaseType>('base');
   const [occupancyRate, setOccupancyRate] = useState<number>(1); // 1 = 100%
-  const [mabaatPercentage, setMabaatPercentage] = useState<number>(0.15); // Default 15% for Malqa study
+  const [mabaatPercentage] = useState<number>(0.15); // Fixed at 15%
 
   // Comparison Modal State
   const [isComparisonModalOpen, setComparisonModalOpen] = useState(false);
@@ -314,16 +314,11 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                             {/* Mgmt Fee */}
                             <div className="flex items-center gap-3">
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">رسوم الإدارة</span>
-                                <SegmentedControl 
-                                    name="cockpit-mabaat"
-                                    selected={mabaatPercentage} 
-                                    onChange={(val) => setMabaatPercentage(val)}
-                                    dark={true}
-                                    options={[
-                                        { value: 0.10, label: '١٠٪' },
-                                        { value: 0.15, label: '١٥٪' }
-                                    ]}
-                                />
+                                <div className="p-1 sm:p-1.5 rounded-full flex relative bg-white/10">
+                                    <div className="px-3 sm:px-6 py-2.5 sm:py-2 text-[13px] sm:text-sm font-bold rounded-full bg-white text-black shadow-sm ring-1 ring-black/5 cursor-default font-cairo">
+                                        ١٥٪
+                                    </div>
+                                </div>
                             </div>
 
                         </div>

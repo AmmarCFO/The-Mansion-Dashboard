@@ -150,7 +150,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   const [activeScenarioId, setActiveScenarioId] = useState<string>(SCENARIOS[0].id);
   const [activeCase, setActiveCase] = useState<CaseType>('base');
   const [occupancyRate, setOccupancyRate] = useState<number>(1); // 1 = 100%
-  const [mabaatPercentage, setMabaatPercentage] = useState<number>(0.15); // Default to 15% for Malqa study
+  const [mabaatPercentage] = useState<number>(0.15); // Fixed at 15%
   
   // Comparison Modal State
   const [isComparisonModalOpen, setComparisonModalOpen] = useState(false);
@@ -305,16 +305,11 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                             {/* Mabaat Share */}
                             <div className="flex items-center gap-3">
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Mgmt Fee</span>
-                                <SegmentedControl 
-                                    name="cockpit-mabaat"
-                                    selected={mabaatPercentage} 
-                                    onChange={(val) => setMabaatPercentage(val)}
-                                    dark={true}
-                                    options={[
-                                        { value: 0.10, label: '10%' },
-                                        { value: 0.15, label: '15%' }
-                                    ]}
-                                />
+                                <div className="p-1 rounded-full flex relative bg-white/10">
+                                    <div className="px-4 py-1.5 text-xs sm:text-sm font-bold rounded-full bg-white text-black shadow-sm ring-1 ring-black/5 cursor-default">
+                                        15%
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
