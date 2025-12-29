@@ -21,7 +21,7 @@ const BookingSourceChart_ar: React.FC<BookingSourceChartProps> = ({ data }) => {
   const totalBookings = data.reduce((sum, item) => sum + item.value, 0);
 
   return (
-    <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-white/50 mb-16 relative overflow-hidden">
+    <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 sm:p-10 shadow-2xl border border-white/50 mb-16 relative overflow-hidden text-right">
       {/* Decorative background blob */}
       <div className="absolute -top-24 -left-24 w-64 h-64 bg-[#4A2C5A]/5 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -71,9 +71,9 @@ const BookingSourceChart_ar: React.FC<BookingSourceChartProps> = ({ data }) => {
               return (
                 <div 
                   key={index} 
-                  className="flex items-center justify-between p-4 rounded-xl hover:bg-white/50 transition-colors duration-300 group cursor-default flex-row-reverse"
+                  className="flex items-center justify-between p-4 rounded-xl hover:bg-white/50 transition-colors duration-300 group cursor-default"
                 >
-                  <div className="flex items-center gap-4 flex-row-reverse">
+                  <div className="flex items-center gap-4">
                     <div 
                       className="w-3 h-12 rounded-full shadow-sm" 
                       style={{ backgroundColor: COLORS[index % COLORS.length] }}

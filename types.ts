@@ -61,6 +61,13 @@ export interface ComparisonLink {
   platform: string;
   title: string;
   url: string;
+  // Rich details for Comp Set
+  location?: string;
+  area?: string;
+  price?: number;
+  type?: string;
+  period?: string;
+  photosUrl?: string;
 }
 
 // Legacy types preserved for compatibility

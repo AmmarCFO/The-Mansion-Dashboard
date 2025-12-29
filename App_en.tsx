@@ -8,6 +8,7 @@ import { FadeInUp } from './components/AnimatedWrappers';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BanknotesIcon } from './components/Icons';
 import ComparisonModal from './components/ComparisonModal';
+import SensitivityMatrix from './components/SensitivityMatrix';
 
 const formatCurrency = (value: number) => {
     return `SAR ${Math.round(value).toLocaleString('en-US')}`;
@@ -194,6 +195,10 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ledgerItems.push({ category: `Management Fee (${Math.round(mabaatPercentage * 100)}%)`, amount: effectiveMabaat, color: 'bg-purple-400' });
   ledgerItems.push({ category: 'Net Income (Owner)', amount: effectiveNetIncome, color: 'bg-emerald-400', highlight: true });
 
+  const isStudyA = activeScenarioId === 'study_a';
+  const isMonthlyPricing = activeScenarioId === 'study_b';
+  const priceDivisor = isMonthlyPricing ? 12 : 1;
+  const priceLabel = isMonthlyPricing ? '(Monthly)' : '(Annual)';
 
   return (
     <div className="min-h-screen bg-[#F5F5F7] text-[#1D1D1F] font-sans overflow-x-hidden selection:bg-[#4A2C5A] selection:text-white">
@@ -306,9 +311,8 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                     onChange={(val) => setMabaatPercentage(val)}
                                     dark={true}
                                     options={[
-                                        { value: 0.15, label: '15%' },
-                                        { value: 0.25, label: '25%' },
-                                        { value: 0.30, label: '30%' }
+                                        { value: 0.10, label: '10%' },
+                                        { value: 0.15, label: '15%' }
                                     ]}
                                 />
                             </div>
@@ -388,16 +392,46 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                             {unit.priceRange && (
                                                 <div className="grid grid-cols-3 gap-2 bg-white/5 rounded-lg p-2.5">
                                                     <div className="text-center border-r border-white/10">
-                                                        <p className="text-[9px] text-white/40 uppercase tracking-widest mb-0.5">Min (Annual)</p>
-                                                        <p className="text-xs font-bold text-white tabular-nums">{unit.priceRange.min.toLocaleString()}</p>
+                                                        <p className="text-[9px] text-white/40 uppercase tracking-widest mb-0.5">
+                                                            Min {isStudyA ? '' : priceLabel}
+                                                        </p>
+                                                        <p className="text-xs font-bold text-white tabular-nums">
+                                                            {Math.round(unit.priceRange.min / priceDivisor).toLocaleString()}
+                                                            {isStudyA && <span className="text-[9px] font-normal text-white/50 ml-0.5">/yr</span>}
+                                                        </p>
+                                                        {isStudyA && (
+                                                            <p className="text-[10px] text-white/60 tabular-nums mt-0.5">
+                                                                {Math.round(unit.priceRange.min / 12).toLocaleString()} <span className="text-[8px]">/mo</span>
+                                                            </p>
+                                                        )}
                                                     </div>
                                                     <div className="text-center border-r border-white/10">
-                                                        <p className="text-[9px] text-emerald-400/60 uppercase tracking-widest mb-0.5 font-bold">Avg (Annual)</p>
-                                                        <p className="text-sm font-black text-emerald-400 tabular-nums">{unit.priceRange.avg.toLocaleString()}</p>
+                                                        <p className="text-[9px] text-emerald-400/60 uppercase tracking-widest mb-0.5 font-bold">
+                                                            Avg {isStudyA ? '' : priceLabel}
+                                                        </p>
+                                                        <p className="text-sm font-black text-emerald-400 tabular-nums">
+                                                            {Math.round(unit.priceRange.avg / priceDivisor).toLocaleString()}
+                                                            {isStudyA && <span className="text-[10px] font-normal text-emerald-400/50 ml-0.5">/yr</span>}
+                                                        </p>
+                                                        {isStudyA && (
+                                                            <p className="text-xs text-white/80 tabular-nums mt-0.5">
+                                                                {Math.round(unit.priceRange.avg / 12).toLocaleString()} <span className="text-[9px]">/mo</span>
+                                                            </p>
+                                                        )}
                                                     </div>
                                                     <div className="text-center">
-                                                        <p className="text-[9px] text-white/40 uppercase tracking-widest mb-0.5">Max (Annual)</p>
-                                                        <p className="text-xs font-bold text-white tabular-nums">{unit.priceRange.max.toLocaleString()}</p>
+                                                        <p className="text-[9px] text-white/40 uppercase tracking-widest mb-0.5">
+                                                            Max {isStudyA ? '' : priceLabel}
+                                                        </p>
+                                                        <p className="text-xs font-bold text-white tabular-nums">
+                                                            {Math.round(unit.priceRange.max / priceDivisor).toLocaleString()}
+                                                            {isStudyA && <span className="text-[9px] font-normal text-white/50 ml-0.5">/yr</span>}
+                                                        </p>
+                                                        {isStudyA && (
+                                                            <p className="text-[10px] text-white/60 tabular-nums mt-0.5">
+                                                                {Math.round(unit.priceRange.max / 12).toLocaleString()} <span className="text-[8px]">/mo</span>
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 </div>
                                             )}
@@ -423,9 +457,22 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                     </motion.div>
                 </AnimatePresence>
             </div>
+            
+            {/* Sensitivity Matrix for Study B */}
+            {activeScenarioId === 'study_b' && (
+                <div className="mt-8 sm:mt-12">
+                    <SensitivityMatrix lang="en" />
+                </div>
+            )}
         </Section>
 
       </main>
+
+      <footer className="py-12 text-center pb-20 sm:pb-12">
+         <p className="text-sm font-semibold text-[#1D1D1F]/30 uppercase tracking-widest">
+            Study by Mathwaa Property Management®
+         </p>
+      </footer>
 
       <ComparisonModal 
         isOpen={isComparisonModalOpen}

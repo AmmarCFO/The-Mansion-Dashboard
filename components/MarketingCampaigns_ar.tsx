@@ -49,7 +49,7 @@ const MarketingCampaigns_ar: React.FC<MarketingCampaignsProps> = ({ socialVideos
   return (
     <div className="space-y-16">
       <div>
-        <div className="flex items-center justify-between mb-8 sm:mb-12 px-2 flex-row-reverse">
+        <div className="flex items-center justify-between mb-8 sm:mb-12 px-2">
              <h3 className="text-2xl font-bold text-[#4A2C5A]">حملات التواصل الاجتماعي</h3>
              <div className="h-[1px] flex-1 bg-[#4A2C5A]/10 mr-8 hidden sm:block"></div>
         </div>
@@ -67,7 +67,7 @@ const MarketingCampaigns_ar: React.FC<MarketingCampaignsProps> = ({ socialVideos
         <div className="relative bg-gradient-to-l from-[#2A5B64] to-[#1e4248] p-8 sm:p-12 rounded-3xl shadow-2xl text-white overflow-hidden text-right">
             <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -ml-16 -mt-16 pointer-events-none"></div>
             
-            <div className="relative z-10 flex flex-col md:flex-row-reverse items-center justify-between gap-8 text-center md:text-right">
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-right">
                 <div className="flex-1">
                     <h3 className="text-2xl sm:text-3xl font-bold mb-4">شركاء الإدراج الاستراتيجيين</h3>
                     <p className="text-white/80 text-lg leading-relaxed max-w-xl mr-auto">

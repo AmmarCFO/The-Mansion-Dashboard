@@ -1,3 +1,4 @@
+
 import { Scenario, ScenarioType, MarketingVideo, Branch, ComparisonLink } from './types';
 
 export const SCENARIOS: Scenario[] = [
@@ -10,22 +11,22 @@ export const SCENARIOS: Scenario[] = [
     
     financials: {
         worst: {
-            revenue: 1942355, 
-            mabaatShare: 1942355 * 0.15, 
-            netIncome: 1942355 * 0.85, 
+            revenue: 1734000, 
+            mabaatShare: 1734000 * 0.15, 
+            netIncome: 1734000 * 0.85, 
             roi: 11.6 // Derived or placeholder
         },
         base: {
-            revenue: 2631528,
-            mabaatShare: 2631528 * 0.15, 
-            netIncome: 2631528 * 0.85, 
-            roi: 15.8
+            revenue: 1942500,
+            mabaatShare: 1942500 * 0.15, 
+            netIncome: 1942500 * 0.85, 
+            roi: 12.9
         },
         best: {
-            revenue: 3320700,
-            mabaatShare: 3320700 * 0.15, 
-            netIncome: 3320700 * 0.85, 
-            roi: 19.9
+            revenue: 2150700,
+            mabaatShare: 2150700 * 0.15, 
+            netIncome: 2150700 * 0.85, 
+            roi: 14.3
         }
     },
 
@@ -39,57 +40,60 @@ export const SCENARIOS: Scenario[] = [
         { 
             name: '1 Bedroom Apartment', 
             count: 22, 
-            avgPrice: 105264, // 8,772 * 12
-            priceRange: { min: 77700, avg: 105264, max: 132828 }, // Monthly * 12
+            avgPrice: 77700, // 6,475 * 12
+            priceRange: { min: 69360, avg: 77700, max: 86028 }, // 5,780*12 to 7,169*12
         },
         { 
             name: '2 Bedroom Apartment', 
             count: 3, 
-            avgPrice: 105264, // Based on CSV data (same as 1Bd)
-            priceRange: { min: 77700, avg: 105264, max: 132828 },
+            avgPrice: 77700, // Same as 1Bd per CSV
+            priceRange: { min: 69360, avg: 77700, max: 86028 },
         }
     ],
   },
   {
     id: 'study_b',
     type: ScenarioType.LONG_TERM,
-    name: 'Study B: Townhouses',
+    name: 'Study B: Co-living',
     color: '#8A6E99', // Purple
-    description: 'Analysis for 49 Three-Bedroom Townhouses. Model strategy: Women-only co-living - each bedroom will be rented out as a Master room. Price per Master room: Conservative case: SAR 3,590 per room | Realistic Case: SAR 4,286 per room | Best case: SAR 4,974 per room',
+    description: 'Co-living model analysis for 49 Townhouses. Each townhouse contains 3 Master Bedrooms rented individually. Total inventory: 147 Master Rooms. Pricing is per room. Monthly Rates: Conservative (3,200 SAR), Realistic (3,500 SAR), Optimistic (3,900 SAR).',
     
     financials: {
         worst: {
-            revenue: 6332760, // CSV Value
-            mabaatShare: 6332760 * 0.15,
-            netIncome: 6332760 * 0.85, 
-            roi: 10.8
+            // Conservative: 470,400 Monthly * 12
+            revenue: 5644800, 
+            mabaatShare: 5644800 * 0.15,
+            netIncome: 5644800 * 0.85, 
+            roi: 9.6
         },
         base: {
-            revenue: 7559916, // CSV Value
-            mabaatShare: 7559916 * 0.15,
-            netIncome: 7559916 * 0.85,
-            roi: 12.9
+            // Realistic: 514,500 Monthly * 12
+            revenue: 6174000, 
+            mabaatShare: 6174000 * 0.15,
+            netIncome: 6174000 * 0.85,
+            roi: 10.5
         },
         best: {
-            revenue: 8774217, // CSV Value
-            mabaatShare: 8774217 * 0.15,
-            netIncome: 8774217 * 0.85,
-            roi: 14.9
+            // Optimistic: 573,300 Monthly * 12
+            revenue: 6879600, 
+            mabaatShare: 6879600 * 0.15,
+            netIncome: 6879600 * 0.85,
+            roi: 11.7
         }
     },
 
     propertyValue: 50000000, // Placeholder
     
-    unitCount: 49,
-    unitLabel: 'Townhouses',
-    occupancyDurationLabel: 'Annual Leasing',
+    unitCount: 147, // 49 Townhouses * 3 Rooms
+    unitLabel: 'Master Rooms',
+    occupancyDurationLabel: 'Annual Contracts',
     
     unitMix: [
         { 
-            name: '3BR Townhouse', 
-            count: 49, 
-            avgPrice: 154284, // 12,857 * 12
-            priceRange: { min: 129240, avg: 154284, max: 179064 },
+            name: 'Master Room (Co-living)', 
+            count: 147, 
+            avgPrice: 42000, // 3,500 * 12
+            priceRange: { min: 38400, avg: 42000, max: 46800 }, // 3200*12 to 3900*12
         }
     ],
   }
@@ -112,45 +116,173 @@ export const MARKETING_VIDEOS: MarketingVideo[] = [
 
 export const COMPARISON_LINKS: Record<string, ComparisonLink[]> = {
   study_a: [
-    // Bayut Listings
-    { platform: 'Bayut', title: '1Bd in Al Arid - 5,000 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87755689.html' },
-    { platform: 'Bayut', title: '1Bd in Al Arid (North) - 6,000 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87623201.html' },
-    { platform: 'Bayut', title: 'Luxury Units - 6,250 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87786764.html' },
-    { platform: 'Bayut', title: 'Furnished Apt - 5,200 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87748923.html' },
-    { platform: 'Bayut', title: 'North Riyadh Apt - 4,500 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87693363.html' },
-    { platform: 'Bayut', title: 'Modern Apt B999 - 6,250 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87845269.html' },
-    
-    // Aqar Listings
-    { platform: 'Aqar', title: 'Unfurnished Al Katib St - 6,667 SAR/mo', url: 'https://sa.aqar.fm/ad/6405378' },
-    
-    // Airbnb Listings (Monthly Estimates)
-    { platform: 'Airbnb', title: 'Hotel-style furnishings - 6,455 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
-    { platform: 'Airbnb', title: 'Modern 1BR 4K TV - 9,716 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
-    { platform: 'Airbnb', title: 'Cozy Stay CS-1 - 9,468 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
-    { platform: 'Airbnb', title: 'Elegant Apt 101 - 7,972 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
-    
-    // Compounds
-    { platform: 'Compound', title: 'Azure Rabwah 1BR - 94,864 SAR/yr', url: 'https://azurerabwah.com' },
-    { platform: 'Compound', title: 'Azure AlReem 1BR - 99,000 SAR/yr', url: 'https://www.google.com/search?q=Azure+AlReem+Compound+Riyadh' },
-    { platform: 'Compound', title: 'Azure Hittin 1BR - 132,825 SAR/yr', url: 'https://www.google.com/search?q=Azure+Hittin+Residential+Compound' },
+    {
+        platform: 'Azure Compound',
+        type: '1 Bedroom Apartment',
+        title: '1 Bedroom Apartment in Al Rabwa',
+        location: 'Al Rabwa',
+        area: '117 sqm',
+        price: 94864,
+        url: 'https://rightcompound.com/green-diamond-compound',
+        photosUrl: 'https://www.canva.com/design/DAG8309BRgE/2V4p8Fmz0oOuQa-AMXBNow/edit?utm_content=DAG8309BRgE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
+    },
+    {
+        platform: 'Azure Compound',
+        type: '1 Bedroom Fully Furnished',
+        title: '1 Bedroom Furnished in Al Reem',
+        location: 'Al Reem',
+        area: '83 sqm',
+        price: 99000,
+        url: 'https://rightcompound.com/al-reem-residences-compound',
+        photosUrl: 'https://www.canva.com/design/DAG84DVDdtU/oWQm9eq2ZwKCDxdi3QPgIw/edit?utm_content=DAG84DVDdtU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
+    },
+    {
+        platform: 'Azure Compound',
+        type: '1 Bedroom Fully Furnished + Terrace',
+        title: '1 Bedroom Furnished + Terrace in Hittin',
+        location: 'Al Hittin',
+        area: '100 sqm',
+        price: 132825,
+        url: 'https://rightcompound.com/hittin-residential-compound-riyadh',
+        photosUrl: 'https://www.canva.com/design/DAG84DmPBK4/ndxj8ASiUXX9SSpUr353YA/edit?utm_content=DAG84DmPBK4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
+    },
+    {
+        platform: 'Azure Compound',
+        type: '1 Bedroom Fully Furnished',
+        title: '1 Bedroom Furnished in Hittin',
+        location: 'Al Hittin',
+        area: '98 sqm',
+        price: 121275,
+        url: 'https://rightcompound.com/hittin-residential-compound-riyadh',
+        photosUrl: 'https://www.canva.com/design/DAG84DmPBK4/ndxj8ASiUXX9SSpUr353YA/edit?utm_content=DAG84DmPBK4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
+    },
+    {
+        platform: 'La Cordia Suites',
+        type: 'Studio with Balcony',
+        title: 'Studio with Balcony in Al Takhassousi',
+        location: 'Al Takhassousi',
+        area: '34 sqm',
+        price: 70000,
+        url: 'https://rightcompound.com/satel-at-la-cordia-complex-583',
+        photosUrl: 'https://www.canva.com/design/DAG84DB8azc/_yyvJWBkuRqpAczQ99PhqQ/edit?utm_content=DAG84DB8azc&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton'
+    }
   ],
   study_b: [
      // Bayut Listings
-     { platform: 'Bayut', title: 'Townhouse for Rent - 7,250 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87828091.html' },
-     { platform: 'Bayut', title: 'Furnished 3BR Al Arid - 7,500 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87842870.html' },
-     { platform: 'Bayut', title: 'Al Majdiah Residence 3BR - 7,333 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87748182.html' },
-     { platform: 'Bayut', title: 'Makeen Compound 3BR - 9,583 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87690281.html' },
-     { platform: 'Bayut', title: 'Luxury 3BR North Riyadh - 11,667 SAR/mo', url: 'https://www.bayut.sa/ar/property/details-87832185.html' },
+     { 
+        platform: 'Bayut', 
+        type: 'Townhouse',
+        title: 'Townhouse for Rent in North Riyadh', 
+        location: 'North Riyadh',
+        area: 'Unknown',
+        price: 7250,
+        period: '/mo',
+        url: 'https://www.bayut.sa/ar/property/details-87828091.html' 
+     },
+     { 
+        platform: 'Bayut', 
+        type: '3 Bedroom',
+        title: 'Furnished 3BR in Al Arid', 
+        location: 'Al Arid',
+        area: 'Unknown',
+        price: 7500,
+        period: '/mo',
+        url: 'https://www.bayut.sa/ar/property/details-87842870.html' 
+     },
+     { 
+        platform: 'Bayut', 
+        type: '3 Bedroom',
+        title: 'Al Majdiah Residence 3BR', 
+        location: 'Al Majdiah',
+        area: 'Unknown',
+        price: 7333,
+        period: '/mo',
+        url: 'https://www.bayut.sa/ar/property/details-87748182.html' 
+     },
+     { 
+        platform: 'Bayut', 
+        type: '3 Bedroom',
+        title: 'Makeen Compound 3BR', 
+        location: 'Al Narjis',
+        area: 'Unknown',
+        price: 9583,
+        period: '/mo',
+        url: 'https://www.bayut.sa/ar/property/details-87690281.html' 
+     },
+     { 
+        platform: 'Bayut', 
+        type: '3 Bedroom',
+        title: 'Luxury 3BR North Riyadh', 
+        location: 'North Riyadh',
+        area: 'Unknown',
+        price: 11667,
+        period: '/mo',
+        url: 'https://www.bayut.sa/ar/property/details-87832185.html' 
+     },
      
      // Airbnb Listings
-     { platform: 'Airbnb', title: 'Spacious Miemar Residence - 20,109 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
-     { platform: 'Airbnb', title: 'Luxury 3BR w/ Terrace - 17,965 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
-     { platform: 'Airbnb', title: 'Luxury Ground Floor 3BR - 20,030 SAR/mo', url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' },
+     { 
+        platform: 'Airbnb', 
+        type: '3 Bedroom',
+        title: 'Spacious Miemar Residence', 
+        location: 'Riyadh',
+        area: 'Unknown',
+        price: 20109,
+        period: '/mo',
+        url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' 
+     },
+     { 
+        platform: 'Airbnb', 
+        type: '3 Bedroom',
+        title: 'Luxury 3BR w/ Terrace', 
+        location: 'Riyadh',
+        area: 'Unknown',
+        price: 17965,
+        period: '/mo',
+        url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' 
+     },
+     { 
+        platform: 'Airbnb', 
+        type: '3 Bedroom',
+        title: 'Luxury Ground Floor 3BR', 
+        location: 'Riyadh',
+        area: 'Unknown',
+        price: 20030,
+        period: '/mo',
+        url: 'https://www.airbnb.com/s/Riyadh--Saudi-Arabia/homes' 
+     },
      
      // Compound Listings
-     { platform: 'Compound', title: 'Azure Rabwah 3BR Duplex - 142,296 SAR/yr', url: 'https://azurerabwah.com' },
-     { platform: 'Compound', title: 'Azure Asala Townhouse - 135,000 SAR/yr', url: 'https://www.google.com/search?q=Azure+Asala+Compound+Riyadh' },
-     { platform: 'Compound', title: 'Azure Narjis 3BR - 165,000 SAR/yr', url: 'https://www.google.com/search?q=Azure+Narjis+Residential+Complex' },
+     { 
+        platform: 'Compound', 
+        type: '3BR Duplex',
+        title: 'Azure Rabwah 3BR Duplex', 
+        location: 'Al Rabwah',
+        area: 'Unknown',
+        price: 142296,
+        period: '/yr',
+        url: 'https://azurerabwah.com' 
+     },
+     { 
+        platform: 'Compound', 
+        type: 'Townhouse',
+        title: 'Azure Asala Townhouse', 
+        location: 'Al Asala',
+        area: 'Unknown',
+        price: 135000,
+        period: '/yr',
+        url: 'https://www.google.com/search?q=Azure+Asala+Compound+Riyadh' 
+     },
+     { 
+        platform: 'Compound', 
+        type: '3 Bedroom',
+        title: 'Azure Narjis 3BR', 
+        location: 'Al Narjis',
+        area: 'Unknown',
+        price: 165000,
+        period: '/yr',
+        url: 'https://www.google.com/search?q=Azure+Narjis+Residential+Complex' 
+     },
   ]
 };
 

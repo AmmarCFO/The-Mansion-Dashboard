@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ComparisonLink } from '../types';
-import { BayutIcon, AirbnbIcon, LinkIcon, AqarIcon } from './Icons';
+import { BayutIcon, AirbnbIcon, LinkIcon, AqarIcon, PhotoIcon, CloseIcon } from './Icons';
 
 interface ComparisonModalProps {
   isOpen: boolean;
@@ -16,8 +16,6 @@ const PlatformIcon: React.FC<{ platform: string; className?: string }> = ({ plat
     if (p.includes('bayut')) return <BayutIcon className={className} />;
     if (p.includes('airbnb')) return <AirbnbIcon className={className} />;
     if (p.includes('aqar')) return <AqarIcon className={className} />;
-    // Wasalt typically uses a purple distinct W, using generic link or a stylized W could work, 
-    // for now we stick to a clean generic if not mapped, or maybe a simple text avatar.
     return (
         <div className={`flex items-center justify-center bg-gray-100 rounded-full ${className}`}>
             <span className="font-bold text-gray-500 text-xs">{platform.charAt(0)}</span>
@@ -36,61 +34,116 @@ const ComparisonModal: React.FC<ComparisonModalProps> = ({ isOpen, onClose, titl
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="absolute inset-0 bg-black/40 backdrop-blur-md"
+            className="absolute inset-0 bg-black/60 backdrop-blur-md"
             onClick={onClose}
         />
         
         {/* Modal Content */}
         <motion.div 
-            initial={{ opacity: 0, scale: 0.95, y: 10 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            className="relative bg-[#F1ECE6] w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden border border-white/50"
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="relative bg-[#F5F5F7] w-full max-w-5xl rounded-[2rem] shadow-2xl overflow-hidden border border-white/50 flex flex-col max-h-[90vh]"
         >
              {/* Header */}
-             <div className="bg-white/50 backdrop-blur-sm border-b border-[#A99484]/10 p-6 flex justify-between items-center">
-                 <h3 className="text-xl font-bold text-[#4A2C5A] tracking-tight">{title}</h3>
+             <div className="bg-white/80 backdrop-blur-xl border-b border-gray-200 p-6 sm:p-8 flex justify-between items-center z-10">
+                 <div>
+                    <h3 className="text-2xl sm:text-3xl font-black text-[#1D1D1F] tracking-tight">{title}</h3>
+                    <p className="text-sm sm:text-base text-gray-500 mt-1 font-medium">Market comparison analysis & verified listings</p>
+                 </div>
                  <button 
                     onClick={onClose}
-                    className="w-8 h-8 rounded-full bg-[#A99484]/10 hover:bg-[#A99484]/20 flex items-center justify-center text-[#4A2C5A] transition-colors"
+                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors ltr:ml-auto rtl:mr-auto"
                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                    </svg>
+                    <CloseIcon className="w-5 h-5" />
                  </button>
              </div>
 
-             {/* Links List */}
-             <div className="p-6 space-y-3 max-h-[60vh] overflow-y-auto">
-                 {links.length === 0 ? (
-                     <p className="text-center text-gray-500 py-8">No comparison links available yet.</p>
-                 ) : (
-                     links.map((link, idx) => (
-                         <a 
-                            key={idx}
-                            href={link.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="group flex items-center gap-4 p-4 rounded-2xl bg-white hover:bg-white/80 border border-transparent hover:border-[#A99484]/20 shadow-sm hover:shadow-md transition-all duration-300"
-                         >
-                             <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
-                                <PlatformIcon platform={link.platform} className="w-8 h-8" />
-                             </div>
-                             <div className="flex-1 min-w-0">
-                                 <h4 className="font-bold text-[#4A2C5A] truncate text-base">{link.title}</h4>
-                                 <p className="text-xs font-medium text-[#4A2C5A]/50 uppercase tracking-wider">{link.platform}</p>
-                             </div>
-                             <div className="w-8 h-8 rounded-full bg-[#4A2C5A]/5 flex items-center justify-center group-hover:bg-[#4A2C5A] group-hover:text-white transition-colors">
-                                 <LinkIcon className="w-4 h-4" />
-                             </div>
-                         </a>
-                     ))
-                 )}
-             </div>
+             {/* Content */}
+             <div className="flex-1 overflow-y-auto p-6 sm:p-8 bg-[#F5F5F7] relative">
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                     {links.map((link, idx) => {
+                         const hasDetails = link.price !== undefined;
+                         
+                         if (!hasDetails) {
+                             // Simple Link Card (Fallback)
+                             return (
+                                 <a 
+                                    key={idx}
+                                    href={link.url} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="group flex items-center gap-4 p-5 rounded-2xl bg-white hover:shadow-lg transition-all duration-300 border border-gray-100"
+                                 >
+                                     <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center group-hover:scale-105 transition-transform">
+                                        <PlatformIcon platform={link.platform} className="w-8 h-8" />
+                                     </div>
+                                     <div className="flex-1 min-w-0 text-start">
+                                         <h4 className="font-bold text-[#1D1D1F] truncate text-sm sm:text-base">{link.title}</h4>
+                                         <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mt-0.5">{link.platform}</p>
+                                     </div>
+                                     <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-[#2A5B64] group-hover:text-white transition-colors">
+                                         <LinkIcon className="w-4 h-4 rtl:rotate-180" />
+                                     </div>
+                                 </a>
+                             );
+                         }
 
-             {/* Footer */}
-             <div className="p-4 bg-gray-50/50 text-center border-t border-[#A99484]/10">
-                 <p className="text-[10px] text-gray-400 font-medium">External comparison data sources.</p>
+                         // Rich Comp Card
+                         return (
+                             <div key={idx} className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-lg transition-all duration-300 group">
+                                 <div className="flex justify-between items-start mb-4">
+                                     <div className="flex items-center gap-2">
+                                        <div className="bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wide border border-emerald-200">
+                                            {link.type}
+                                        </div>
+                                     </div>
+                                     <div className="text-end">
+                                         <span className="block text-xl sm:text-2xl font-black text-[#1D1D1F] tracking-tight">
+                                             {link.price?.toLocaleString()} <span className="text-xs font-normal text-gray-500">SAR{link.period || ''}</span>
+                                         </span>
+                                     </div>
+                                 </div>
+
+                                 <div className="flex-1 mb-8 text-start">
+                                     <h4 className="font-bold text-gray-900 mb-2 text-lg leading-snug">{link.location}</h4>
+                                     <div className="flex flex-wrap items-center text-xs font-semibold text-gray-500 gap-3">
+                                         {link.area && link.area !== 'Unknown' && (
+                                            <>
+                                                <span className="bg-gray-100 px-2 py-1 rounded-md text-gray-600">{link.area}</span>
+                                                <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                            </>
+                                         )}
+                                         <span className="uppercase tracking-wide">{link.platform}</span>
+                                     </div>
+                                 </div>
+
+                                 <div className="flex items-center gap-3 mt-auto">
+                                     {link.photosUrl && (
+                                         <a 
+                                            href={link.photosUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-gray-100 text-gray-700 font-bold text-sm hover:bg-gray-200 transition-colors active:scale-95"
+                                         >
+                                             <PhotoIcon className="w-4 h-4" />
+                                             <span>Photos</span>
+                                         </a>
+                                     )}
+                                     <a 
+                                        href={link.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#1D1D1F] text-white font-bold text-sm hover:bg-gray-800 transition-colors active:scale-95 shadow-lg shadow-gray-200"
+                                     >
+                                         <LinkIcon className="w-4 h-4 rtl:rotate-180" />
+                                         <span>Visit</span>
+                                     </a>
+                                 </div>
+                             </div>
+                         );
+                     })}
+                 </div>
              </div>
         </motion.div>
       </div>
