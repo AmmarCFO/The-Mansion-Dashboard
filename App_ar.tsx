@@ -19,27 +19,30 @@ type CaseType = 'worst' | 'base' | 'best';
 // --- Apple-Style Segmented Control (RTL Optimized) ---
 const SegmentedControl: React.FC<{
     name: string;
-    options: { value: string | number; label: string }[];
+    options: { value: string | number; label: string; className?: string; activePillClassName?: string; activeTextClassName?: string }[];
     selected: string | number;
     onChange: (value: any) => void;
     dark?: boolean;
 }> = ({ name, options, selected, onChange, dark = false }) => {
     
     const containerClass = dark ? 'bg-white/10' : 'bg-[#E5E5EA]';
-    const activePillClass = 'bg-white shadow-sm ring-1 ring-black/5';
-    const activeTextClass = 'text-black';
-    const inactiveTextClass = dark ? 'text-white/60 hover:text-white' : 'text-[#8E8E93] hover:text-black';
+    const defaultActivePillClass = 'bg-white shadow-sm ring-1 ring-black/5';
+    const defaultActiveTextClass = 'text-black';
+    const defaultInactiveTextClass = dark ? 'text-white/60 hover:text-white' : 'text-[#8E8E93] hover:text-black';
 
     return (
         <div className={`p-1 sm:p-1.5 rounded-full flex relative w-full sm:w-auto overflow-hidden ${containerClass}`}>
             {options.map((option) => {
                 const isActive = selected === option.value;
+                const activePillClass = option.activePillClassName || defaultActivePillClass;
+                const activeTextClass = option.activeTextClassName || defaultActiveTextClass;
+
                 return (
                     <button
                         key={option.value}
                         onClick={() => onChange(option.value)}
                         className={`relative z-10 flex-1 px-3 sm:px-6 py-2.5 sm:py-2 text-[13px] sm:text-sm font-bold transition-colors duration-200 rounded-full font-cairo whitespace-nowrap ${
-                            isActive ? activeTextClass : inactiveTextClass
+                            isActive ? activeTextClass : (option.className || defaultInactiveTextClass)
                         }`}
                         style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
@@ -99,7 +102,7 @@ const DigitalLedger: React.FC<{
                                     </div>
                                     
                                     <div className="flex items-baseline justify-end gap-2 mt-1">
-                                        <span className="text-3xl sm:text-4xl font-black text-white tracking-tighter tabular-nums text-shadow-sm">{formatCurrency(item.amount)}</span>
+                                        <span className="text-2xl sm:text-4xl font-black text-white tracking-tighter tabular-nums text-shadow-sm">{formatCurrency(item.amount)}</span>
                                     </div>
 
                                     {/* Progress Bar specific to highlight */}
@@ -209,8 +212,20 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
 
   const occupancyOptions = [
       { value: 0.6, label: '٦٠٪' },
-      { value: 0.7, label: '٧٠٪' },
-      { value: 0.8, label: '٨٠٪' },
+      { 
+          value: 0.7, 
+          label: '٧٠٪', 
+          className: 'text-emerald-400 hover:text-emerald-300',
+          activePillClassName: 'bg-emerald-500 shadow-sm ring-1 ring-emerald-600',
+          activeTextClassName: 'text-white'
+      },
+      { 
+          value: 0.8, 
+          label: '٨٠٪', 
+          className: 'text-emerald-400 hover:text-emerald-300',
+          activePillClassName: 'bg-emerald-500 shadow-sm ring-1 ring-emerald-600',
+          activeTextClassName: 'text-white'
+      },
       { value: 0.9, label: '٩٠٪' },
       { value: 1.0, label: '١٠٠٪' },
   ];
@@ -239,14 +254,14 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
       <main className="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
         
         <FadeInUp>
-          <div className="text-center pt-10 pb-8 sm:pt-16 sm:pb-8">
+          <div className="text-center pt-8 pb-8 sm:pt-16 sm:pb-8">
              <div className="inline-block mb-4 sm:mb-6 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-white border border-gray-200 shadow-sm">
                 <span className="text-[10px] sm:text-[11px] font-bold tracking-[0.2em] uppercase text-gray-500">دراسة جدوى عقارية</span>
             </div>
-            <h1 className="text-5xl sm:text-7xl font-black text-[#1D1D1F] tracking-tighter mb-4 sm:mb-6 leading-[0.9]">
+            <h1 className="text-4xl sm:text-7xl font-black text-[#1D1D1F] tracking-tighter mb-4 sm:mb-6 leading-[0.9]">
               The Mansion<span className="text-[#4A2C5A]">.</span>
             </h1>
-            <p className="text-lg sm:text-2xl text-gray-500 max-w-3xl mx-auto font-medium leading-relaxed tracking-tight px-4 mb-8">
+            <p className="text-sm sm:text-2xl text-gray-500 max-w-3xl mx-auto font-medium leading-relaxed tracking-tight px-4 mb-8">
                 تحليل مقارن لمحفظة <span className="text-[#2A5B64]">الشقق السكنية</span> ومجمع <span className="text-[#8A6E99]">التاون هاوس</span> بنظام التأجير طويل الأجل والسكن المشترك.
             </p>
 
@@ -254,7 +269,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                 <button 
                     onClick={() => handleOpenComparison('study_a')}
-                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden"
+                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden w-full sm:w-auto justify-center"
                 >
                     <div className="absolute inset-0 bg-gradient-to-l from-[#2A5B64]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="w-2 h-2 rounded-full bg-[#2A5B64]"></span>
@@ -262,7 +277,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 </button>
                 <button 
                     onClick={() => handleOpenComparison('study_b')}
-                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden"
+                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden w-full sm:w-auto justify-center"
                 >
                      <div className="absolute inset-0 bg-gradient-to-l from-[#8A6E99]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="w-2 h-2 rounded-full bg-[#8A6E99]"></span>
@@ -346,7 +361,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.98 }}
                         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                        className="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 text-right"
+                        className="p-4 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10 text-right"
                     >
                         {/* RIGHT COLUMN (Financials) - Natural RTL First Column */}
                         <div className="lg:col-span-7 space-y-6">
@@ -356,7 +371,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                     الإيرادات السنوية المتوقعة
                                 </p>
                                 <div className="flex items-baseline justify-start gap-4 sm:gap-6">
-                                    <h2 className="text-5xl sm:text-7xl font-black tracking-tighter text-white tabular-nums">
+                                    <h2 className="text-3xl sm:text-7xl font-black tracking-tighter text-white tabular-nums">
                                         {formatCurrency(effectiveRevenue)}
                                     </h2>
                                 </div>
@@ -364,7 +379,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                                     <span className="text-[10px] font-bold text-white/70 tracking-wide uppercase">
                                         {translateDuration(activeScenario.occupancyDurationLabel)}
-                                        {` (إشغال ${Math.round(effectiveOccupancy * 100)}٪)`}
+                                        {` (إشغال ${Math.round(effectiveOccupancy * 100).toLocaleString('ar-SA')}٪)`}
                                     </span>
                                 </div>
                             </div>
@@ -411,12 +426,12 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                             أدنى {isStudyA ? '' : priceLabel}
                                                         </p>
                                                         <p className="text-xs font-bold text-white tabular-nums">
-                                                            {Math.round(unit.priceRange.min / priceDivisor).toLocaleString()}
+                                                            {Math.round(unit.priceRange.min / priceDivisor).toLocaleString('ar-SA')}
                                                             {isStudyA && <span className="text-[9px] font-normal text-white/50 mr-0.5">سنوي</span>}
                                                         </p>
                                                         {isStudyA && (
                                                             <p className="text-[10px] text-white/60 tabular-nums mt-0.5">
-                                                                {Math.round(unit.priceRange.min / 12).toLocaleString()} <span className="text-[8px]">شهري</span>
+                                                                {Math.round(unit.priceRange.min / 12).toLocaleString('ar-SA')} <span className="text-[8px]">شهري</span>
                                                             </p>
                                                         )}
                                                     </div>
@@ -425,12 +440,12 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                             متوسط {isStudyA ? '' : priceLabel}
                                                         </p>
                                                         <p className="text-sm font-black text-emerald-400 tabular-nums">
-                                                            {Math.round(unit.priceRange.avg / priceDivisor).toLocaleString()}
+                                                            {Math.round(unit.priceRange.avg / priceDivisor).toLocaleString('ar-SA')}
                                                             {isStudyA && <span className="text-[10px] font-normal text-emerald-400/50 mr-0.5">سنوي</span>}
                                                         </p>
                                                         {isStudyA && (
                                                             <p className="text-xs text-white/80 tabular-nums mt-0.5">
-                                                                {Math.round(unit.priceRange.avg / 12).toLocaleString()} <span className="text-[9px]">شهري</span>
+                                                                {Math.round(unit.priceRange.avg / 12).toLocaleString('ar-SA')} <span className="text-[9px]">شهري</span>
                                                             </p>
                                                         )}
                                                     </div>
@@ -439,12 +454,12 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                             أقصى {isStudyA ? '' : priceLabel}
                                                         </p>
                                                         <p className="text-xs font-bold text-white tabular-nums">
-                                                            {Math.round(unit.priceRange.max / priceDivisor).toLocaleString()}
+                                                            {Math.round(unit.priceRange.max / priceDivisor).toLocaleString('ar-SA')}
                                                             {isStudyA && <span className="text-[9px] font-normal text-white/50 mr-0.5">سنوي</span>}
                                                         </p>
                                                         {isStudyA && (
                                                             <p className="text-[10px] text-white/60 tabular-nums mt-0.5">
-                                                                {Math.round(unit.priceRange.max / 12).toLocaleString()} <span className="text-[8px]">شهري</span>
+                                                                {Math.round(unit.priceRange.max / 12).toLocaleString('ar-SA')} <span className="text-[8px]">شهري</span>
                                                             </p>
                                                         )}
                                                     </div>

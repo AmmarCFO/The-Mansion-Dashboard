@@ -19,27 +19,30 @@ type CaseType = 'worst' | 'base' | 'best';
 // --- Apple-Style Segmented Control (Universal White Pill) ---
 const SegmentedControl: React.FC<{
     name: string;
-    options: { value: string | number; label: string }[];
+    options: { value: string | number; label: string; className?: string; activePillClassName?: string; activeTextClassName?: string }[];
     selected: string | number;
     onChange: (value: any) => void;
     dark?: boolean;
 }> = ({ name, options, selected, onChange, dark = false }) => {
     
     const containerClass = dark ? 'bg-white/10' : 'bg-[#E5E5EA]';
-    const activePillClass = 'bg-white shadow-sm ring-1 ring-black/5';
-    const activeTextClass = 'text-black';
-    const inactiveTextClass = dark ? 'text-white/60 hover:text-white' : 'text-[#8E8E93] hover:text-black';
+    const defaultActivePillClass = 'bg-white shadow-sm ring-1 ring-black/5';
+    const defaultActiveTextClass = 'text-black';
+    const defaultInactiveTextClass = dark ? 'text-white/60 hover:text-white' : 'text-[#8E8E93] hover:text-black';
 
     return (
         <div className={`p-1 rounded-full flex relative w-full sm:w-auto overflow-hidden ${containerClass}`}>
             {options.map((option) => {
                 const isActive = selected === option.value;
+                const activePillClass = option.activePillClassName || defaultActivePillClass;
+                const activeTextClass = option.activeTextClassName || defaultActiveTextClass;
+
                 return (
                     <button
                         key={option.value}
                         onClick={() => onChange(option.value)}
-                        className={`relative z-10 flex-1 px-4 py-1.5 text-xs sm:text-sm font-bold transition-colors duration-200 rounded-full whitespace-nowrap ${
-                            isActive ? activeTextClass : inactiveTextClass
+                        className={`relative z-10 flex-1 px-3 sm:px-4 py-1.5 sm:py-1.5 text-xs sm:text-sm font-bold transition-colors duration-200 rounded-full whitespace-nowrap ${
+                            isActive ? activeTextClass : (option.className || defaultInactiveTextClass)
                         }`}
                         style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
@@ -100,7 +103,7 @@ const DigitalLedger: React.FC<{
                                     </div>
                                     
                                     <div className="flex items-baseline gap-2 mt-1">
-                                        <span className="text-3xl sm:text-4xl font-black text-white tracking-tighter tabular-nums text-shadow-sm">{formatCurrency(item.amount)}</span>
+                                        <span className="text-2xl sm:text-4xl font-black text-white tracking-tighter tabular-nums text-shadow-sm">{formatCurrency(item.amount)}</span>
                                     </div>
 
                                     {/* Progress Bar specific to highlight */}
@@ -177,8 +180,20 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
 
   const occupancyOptions = [
       { value: 0.6, label: '60%' },
-      { value: 0.7, label: '70%' },
-      { value: 0.8, label: '80%' },
+      { 
+          value: 0.7, 
+          label: '70%', 
+          className: 'text-emerald-400 hover:text-emerald-300',
+          activePillClassName: 'bg-emerald-500 shadow-sm ring-1 ring-emerald-600',
+          activeTextClassName: 'text-white'
+      },
+      { 
+          value: 0.8, 
+          label: '80%', 
+          className: 'text-emerald-400 hover:text-emerald-300',
+          activePillClassName: 'bg-emerald-500 shadow-sm ring-1 ring-emerald-600',
+          activeTextClassName: 'text-white'
+      },
       { value: 0.9, label: '90%' },
       { value: 1.0, label: '100%' },
   ];
@@ -209,7 +224,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
         
         {/* Project Header */}
         <FadeInUp>
-          <div className="text-center pt-10 pb-8 sm:pt-16 sm:pb-8">
+          <div className="text-center pt-8 pb-8 sm:pt-16 sm:pb-8">
             <motion.div 
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -217,10 +232,10 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
             >
                 <span className="text-[10px] font-bold tracking-[0.2em] uppercase text-gray-500">Property Feasibility Study</span>
             </motion.div>
-            <h1 className="text-4xl sm:text-6xl font-black text-[#1D1D1F] tracking-tighter mb-4 leading-none">
+            <h1 className="text-3xl sm:text-6xl font-black text-[#1D1D1F] tracking-tighter mb-4 leading-none">
               The Mansion<span className="text-[#8A6E99]">.</span>
             </h1>
-            <p className="text-base sm:text-xl text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed tracking-tight px-4 mb-8">
+            <p className="text-sm sm:text-xl text-gray-500 max-w-2xl mx-auto font-medium leading-relaxed tracking-tight px-4 mb-8">
                 Comparative analysis for <span className="text-[#2A5B64]">Apartment Portfolio</span> and <span className="text-[#8A6E99]">Townhouse Development</span> under Long Term Rental and Co-living models.
             </p>
 
@@ -228,7 +243,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
                 <button 
                     onClick={() => handleOpenComparison('study_a')}
-                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden"
+                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden w-full sm:w-auto justify-center"
                 >
                     <div className="absolute inset-0 bg-gradient-to-r from-[#2A5B64]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="w-2 h-2 rounded-full bg-[#2A5B64]"></span>
@@ -236,7 +251,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 </button>
                 <button 
                     onClick={() => handleOpenComparison('study_b')}
-                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden"
+                    className="group relative px-6 py-2.5 rounded-full bg-white border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2 overflow-hidden w-full sm:w-auto justify-center"
                 >
                      <div className="absolute inset-0 bg-gradient-to-r from-[#8A6E99]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="w-2 h-2 rounded-full bg-[#8A6E99]"></span>
@@ -255,7 +270,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 mix-blend-overlay pointer-events-none"></div>
                 
                 {/* Control Bar - Mobile Optimized */}
-                <div className="bg-white/5 backdrop-blur-xl border-b border-white/5 p-4 flex flex-col gap-4 sticky top-0 z-20">
+                <div className="bg-white/5 backdrop-blur-xl border-b border-white/5 p-4 sm:p-6 flex flex-col gap-4 sticky top-0 z-20">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                          {/* Study Selector */}
                          <div className="w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0 hide-scrollbar">
@@ -324,7 +339,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.98 }}
                         transition={{ duration: 0.3, ease: "circOut" }}
-                        className="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10"
+                        className="p-4 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10"
                     >
                         {/* LEFT COLUMN: The Engine */}
                         <div className="lg:col-span-7 space-y-6">
@@ -335,7 +350,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                     Projected Annual Revenue
                                 </p>
                                 <div className="flex items-baseline gap-4">
-                                    <h2 className="text-4xl sm:text-6xl font-black tracking-tighter text-white tabular-nums">
+                                    <h2 className="text-3xl sm:text-6xl font-black tracking-tighter text-white tabular-nums">
                                         {formatCurrency(effectiveRevenue)}
                                     </h2>
                                 </div>

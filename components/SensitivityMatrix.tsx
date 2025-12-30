@@ -91,6 +91,7 @@ const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang, scenarioId 
   const data = DATA_CONFIG[scenarioKey];
   const t = { ...COMMON_LABELS[lang], ...data[lang] };
   const values = data.values;
+  const locale = isRTL ? 'ar-SA' : 'en-US';
 
   return (
     <motion.div 
@@ -101,27 +102,27 @@ const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang, scenarioId 
         dir={isRTL ? 'rtl' : 'ltr'}
     >
         {/* Dark Glass Card */}
-        <div className="bg-[#09090b] rounded-[40px] shadow-2xl border border-white/10 overflow-hidden relative">
+        <div className="bg-[#09090b] rounded-[24px] sm:rounded-[40px] shadow-2xl border border-white/10 overflow-hidden relative">
              {/* Noise Texture for that premium hardware feel */}
              <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.15] mix-blend-overlay pointer-events-none"></div>
              
              {/* Ambient Glow */}
-             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#8A6E99]/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
+             <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#8A6E99]/20 rounded-full blur-[80px] sm:blur-[120px] pointer-events-none mix-blend-screen"></div>
 
-             <div className="relative z-10 p-8 sm:p-12">
+             <div className="relative z-10 p-4 sm:p-12">
                 
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row items-center justify-between mb-12 border-b border-white/5 pb-8 gap-6">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-8 sm:mb-12 border-b border-white/5 pb-6 sm:pb-8 gap-6">
                     <div className="text-center sm:text-left rtl:sm:text-right">
-                        <h3 className="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-3">
+                        <h3 className="text-2xl sm:text-4xl font-bold text-white tracking-tight mb-2 sm:mb-3">
                             {t.title}
                         </h3>
-                        <p className="text-base sm:text-lg leading-relaxed text-white/50 max-w-2xl font-medium">
+                        <p className="text-sm sm:text-lg leading-relaxed text-white/50 max-w-2xl font-medium">
                             {t.subtitle}
                         </p>
                     </div>
                     {/* Legend */}
-                    <div className="flex items-center gap-4 bg-white/5 rounded-full px-6 py-3 border border-white/5">
+                    <div className="flex items-center gap-4 bg-white/5 rounded-full px-6 py-3 border border-white/5 whitespace-nowrap overflow-x-auto max-w-full">
                         <div className="flex items-center gap-2">
                              <div className="w-2 h-2 rounded-full bg-[#8A6E99] opacity-30"></div>
                              <span className="text-[10px] font-bold text-white/40 uppercase tracking-wider">{t.low}</span>
@@ -147,7 +148,9 @@ const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang, scenarioId 
                              {OCCUPANCY_COLS.map((occ) => (
                                  <div key={occ} className="col-span-1 text-center">
                                      <div className="inline-block px-4 py-1 rounded-full bg-white/5 border border-white/5">
-                                        <span className="text-sm font-bold text-white">{occ}%</span>
+                                        <span className="text-sm font-bold text-white">
+                                            {occ.toLocaleString(locale)}%
+                                        </span>
                                      </div>
                                  </div>
                              ))}
@@ -196,7 +199,7 @@ const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang, scenarioId 
                                                 {/* Content */}
                                                 <div className="relative z-10 text-center">
                                                     <span className="block text-[19px] font-bold text-white tabular-nums tracking-tight drop-shadow-md">
-                                                        {val.toLocaleString()}
+                                                        {val.toLocaleString(locale)}
                                                     </span>
                                                     <span className="text-[9px] font-bold text-white/60 uppercase tracking-wider mt-0.5 opacity-0 group-hover/cell:opacity-100 transition-opacity duration-200 absolute left-0 right-0 -bottom-3 translate-y-2 group-hover/cell:translate-y-0">
                                                         {t.currency}
