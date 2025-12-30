@@ -96,6 +96,58 @@ export const SCENARIOS: Scenario[] = [
             priceRange: { min: 38400, avg: 42000, max: 46800 }, // 3200*12 to 3900*12
         }
     ],
+  },
+  {
+    id: 'study_c',
+    type: ScenarioType.LONG_TERM,
+    name: 'Study C: Co-living Plus',
+    color: '#C98B8B', // Muted Red/Terra Cotta
+    description: 'Enhanced Co-living model maximizing density. 49 Townhouses converted to 4-bedroom units (3 Master + 1 Single). Total inventory: 196 Rooms. Single rooms priced at fixed SAR 2,900/mo across all cases.',
+    
+    financials: {
+        worst: {
+            // Master: 3200*147*12 = 5,644,800 | Single: 2900*49*12 = 1,705,200
+            revenue: 7350000, 
+            mabaatShare: 7350000 * 0.15,
+            netIncome: 7350000 * 0.85, 
+            roi: 12.5
+        },
+        base: {
+            // Master: 3500*147*12 = 6,174,000 | Single: 2900*49*12 = 1,705,200
+            revenue: 7879200, 
+            mabaatShare: 7879200 * 0.15,
+            netIncome: 7879200 * 0.85,
+            roi: 13.4
+        },
+        best: {
+            // Master: 3900*147*12 = 6,879,600 | Single: 2900*49*12 = 1,705,200
+            revenue: 8584800, 
+            mabaatShare: 8584800 * 0.15,
+            netIncome: 8584800 * 0.85,
+            roi: 14.6
+        }
+    },
+
+    propertyValue: 50000000, 
+    
+    unitCount: 196, // 147 Master + 49 Single
+    unitLabel: 'Rooms',
+    occupancyDurationLabel: 'Annual Contracts',
+    
+    unitMix: [
+        { 
+            name: 'Master Room', 
+            count: 147, 
+            avgPrice: 42000, // 3500 * 12
+            priceRange: { min: 38400, avg: 42000, max: 46800 }, // Same as Study B
+        },
+        { 
+            name: 'Single Room', 
+            count: 49, 
+            avgPrice: 34800, // 2900 * 12
+            priceRange: { min: 34800, avg: 34800, max: 34800 }, // Fixed
+        }
+    ],
   }
 ];
 
@@ -283,7 +335,8 @@ export const COMPARISON_LINKS: Record<string, ComparisonLink[]> = {
         period: '/yr',
         url: 'https://www.google.com/search?q=Azure+Narjis+Residential+Complex' 
      },
-  ]
+  ],
+  study_c: [] // Uses Study B context
 };
 
 export const MABAAT_SHARE_PERCENTAGE = 0.15; // Updated to 15% as per CSV

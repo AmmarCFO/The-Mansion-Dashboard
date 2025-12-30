@@ -164,7 +164,6 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   const effectiveRevenue = Math.round(baseFinancials.revenue * effectiveOccupancy);
   
   // Management Fee Calculation
-  // Mgmt Fee is typically calculated on the Collected Revenue (Gross * Occupancy)
   const effectiveMabaat = Math.round(effectiveRevenue * mabaatPercentage);
   
   // Net Income
@@ -185,7 +184,9 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ];
 
   const handleOpenComparison = (studyId: string) => {
-      setComparisonStudyId(studyId);
+      // For Study C, we use Study B comparisons as they are both Townhouse based
+      const targetId = studyId === 'study_c' ? 'study_b' : studyId;
+      setComparisonStudyId(targetId);
       setComparisonModalOpen(true);
   };
 
@@ -196,7 +197,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ledgerItems.push({ category: 'Net Income (Owner)', amount: effectiveNetIncome, color: 'bg-emerald-400', highlight: true });
 
   const isStudyA = activeScenarioId === 'study_a';
-  const isMonthlyPricing = activeScenarioId === 'study_b';
+  const isMonthlyPricing = ['study_b', 'study_c'].includes(activeScenarioId);
   const priceDivisor = isMonthlyPricing ? 12 : 1;
   const priceLabel = isMonthlyPricing ? '(Monthly)' : '(Annual)';
 
@@ -239,7 +240,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 >
                      <div className="absolute inset-0 bg-gradient-to-r from-[#8A6E99]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="w-2 h-2 rounded-full bg-[#8A6E99]"></span>
-                    <span className="text-sm font-bold text-[#4A2C5A] relative z-10">Study B Comparison Set</span>
+                    <span className="text-sm font-bold text-[#4A2C5A] relative z-10">Study B/C Comparison Set</span>
                 </button>
             </div>
           </div>
@@ -453,10 +454,10 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 </AnimatePresence>
             </div>
             
-            {/* Sensitivity Matrix for Study B */}
-            {activeScenarioId === 'study_b' && (
+            {/* Sensitivity Matrix for Study B and Study C */}
+            {(activeScenarioId === 'study_b' || activeScenarioId === 'study_c') && (
                 <div className="mt-8 sm:mt-12">
-                    <SensitivityMatrix lang="en" />
+                    <SensitivityMatrix lang="en" scenarioId={activeScenarioId} />
                 </div>
             )}
         </Section>
@@ -472,7 +473,7 @@ const App_en: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
       <ComparisonModal 
         isOpen={isComparisonModalOpen}
         onClose={() => setComparisonModalOpen(false)}
-        title={comparisonStudyId === 'study_a' ? 'Study A: Apartments Comparison' : 'Study B: Townhouses Comparison'}
+        title={comparisonStudyId === 'study_a' ? 'Study A: Apartments Comparison' : 'Study B/C: Townhouses Comparison'}
         links={COMPARISON_LINKS[comparisonStudyId] || []}
       />
     </div>

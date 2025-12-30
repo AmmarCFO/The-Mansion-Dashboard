@@ -4,52 +4,93 @@ import { motion } from 'framer-motion';
 
 interface SensitivityMatrixProps {
   lang: 'en' | 'ar';
+  scenarioId?: string;
 }
 
-const DATA = {
-  en: {
-    title: 'Revenue Sensitivity Matrix',
-    subtitle: 'Annual revenue impact analysis per townhouse (3 Master Rooms) based on occupancy variations & pricing strategies.',
-    scenarios: [
-        { name: 'Conservative', price: 'SAR 3,200 / room' },
-        { name: 'Realistic', price: 'SAR 3,500 / room' },
-        { name: 'Optimistic', price: 'SAR 3,900 / room' }
-    ],
-    occupancyLabel: 'Occupancy Rate',
-    currency: 'SAR',
-    low: 'Low Impact',
-    high: 'High Impact'
+const DATA_CONFIG = {
+  study_b: {
+    en: {
+        title: 'Revenue Sensitivity Matrix (Co-living)',
+        subtitle: 'Annual revenue impact analysis per townhouse (3 Master Rooms) based on occupancy variations & pricing strategies.',
+        scenarios: [
+            { name: 'Conservative', price: 'SAR 3,200 / room' },
+            { name: 'Realistic', price: 'SAR 3,500 / room' },
+            { name: 'Optimistic', price: 'SAR 3,900 / room' }
+        ],
+    },
+    ar: {
+        title: 'مصفوفة حساسية الإيرادات (سكن مشترك)',
+        subtitle: 'تحليل أثر الإيرادات السنوية لكل تاون هاوس (٣ غرف ماستر) بناءً على متغيرات الإشغال واستراتيجيات التسعير.',
+        scenarios: [
+            { name: 'متحفظ', price: '٣,٢٠٠ ريال / غرفة' },
+            { name: 'واقعي', price: '٣,٥٠٠ ريال / غرفة' },
+            { name: 'متفائل', price: '٣,٩٠٠ ريال / غرفة' }
+        ],
+    },
+    values: [
+      // Conservative
+      [115200, 103680, 92160, 80640, 69120],
+      // Realistic
+      [126000, 113400, 100800, 88200, 75600],
+      // Optimistic
+      [140400, 126360, 112320, 98280, 84240]
+    ]
   },
-  ar: {
-    title: 'مصفوفة حساسية الإيرادات',
-    subtitle: 'تحليل أثر الإيرادات السنوية لكل تاون هاوس (٣ غرف ماستر) بناءً على متغيرات الإشغال واستراتيجيات التسعير.',
-    scenarios: [
-        { name: 'متحفظ', price: '٣,٢٠٠ ريال / غرفة' },
-        { name: 'واقعي', price: '٣,٥٠٠ ريال / غرفة' },
-        { name: 'متفائل', price: '٣,٩٠٠ ريال / غرفة' }
-    ],
-    occupancyLabel: 'معدل الإشغال',
-    currency: 'ريال',
-    low: 'أثر منخفض',
-    high: 'أثر مرتفع'
+  study_c: {
+    en: {
+        title: 'Revenue Sensitivity Matrix (Co-living Plus)',
+        subtitle: 'Annual revenue impact analysis per townhouse (3 Master Rooms + 1 Single Room) with Single Room fixed at SAR 2,900.',
+        scenarios: [
+            { name: 'Conservative', price: 'M: 3,200 | S: 2,900' },
+            { name: 'Realistic', price: 'M: 3,500 | S: 2,900' },
+            { name: 'Optimistic', price: 'M: 3,900 | S: 2,900' }
+        ],
+    },
+    ar: {
+        title: 'مصفوفة حساسية الإيرادات (سكن مشترك بلس)',
+        subtitle: 'تحليل أثر الإيرادات السنوية لكل تاون هاوس (٣ غرف ماستر + ١ غرفة مفردة) مع تثبيت سعر الغرفة المفردة عند ٢,٩٠٠ ريال.',
+        scenarios: [
+            { name: 'متحفظ', price: 'م: ٣,٢٠٠ | ف: ٢,٩٠٠' },
+            { name: 'واقعي', price: 'م: ٣,٥٠٠ | ف: ٢,٩٠٠' },
+            { name: 'متفائل', price: 'م: ٣,٩٠٠ | ف: ٢,٩٠٠' }
+        ],
+    },
+    values: [
+      // Conservative: (3200*3 + 2900*1)*12 = 150,000
+      [150000, 135000, 120000, 105000, 90000],
+      // Realistic: (3500*3 + 2900*1)*12 = 160,800
+      [160800, 144720, 128640, 112560, 96480],
+      // Optimistic: (3900*3 + 2900*1)*12 = 175,200
+      [175200, 157680, 140160, 122640, 105120]
+    ]
   }
 };
 
-// Data structure: [Scenario Index][Occupancy Index]
-const VALUES = [
-  // Conservative
-  [115200, 103680, 92160, 80640, 69120],
-  // Realistic
-  [126000, 113400, 100800, 88200, 75600],
-  // Optimistic
-  [140400, 126360, 112320, 98280, 84240]
-];
+const COMMON_LABELS = {
+    en: {
+        occupancyLabel: 'Occupancy Rate',
+        currency: 'SAR',
+        low: 'Low Impact',
+        high: 'High Impact'
+    },
+    ar: {
+        occupancyLabel: 'معدل الإشغال',
+        currency: 'ريال',
+        low: 'أثر منخفض',
+        high: 'أثر مرتفع'
+    }
+}
 
 const OCCUPANCY_COLS = [100, 90, 80, 70, 60];
 
-const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang }) => {
-  const t = DATA[lang];
+const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang, scenarioId = 'study_b' }) => {
   const isRTL = lang === 'ar';
+  
+  // Select data based on scenario, default to Study B if Study A is passed or unknown
+  const scenarioKey = (scenarioId === 'study_c') ? 'study_c' : 'study_b';
+  const data = DATA_CONFIG[scenarioKey];
+  const t = { ...COMMON_LABELS[lang], ...data[lang] };
+  const values = data.values;
 
   return (
     <motion.div 
@@ -119,16 +160,16 @@ const SensitivityMatrix: React.FC<SensitivityMatrixProps> = ({ lang }) => {
                                     {/* Row Header */}
                                     <div className="col-span-1 pr-4">
                                         <div className="text-[17px] font-bold text-white mb-2 tracking-tight">{scenario.name}</div>
-                                        <div className="text-[11px] font-semibold text-[#8A6E99] bg-[#8A6E99]/10 inline-block px-3 py-1 rounded-lg tracking-wide border border-[#8A6E99]/20">
+                                        <div className="text-[11px] font-semibold text-[#8A6E99] bg-[#8A6E99]/10 inline-block px-3 py-1 rounded-lg tracking-wide border border-[#8A6E99]/20 whitespace-nowrap">
                                             {scenario.price}
                                         </div>
                                     </div>
 
                                     {/* Cells */}
-                                    {VALUES[sIdx].map((val, vIdx) => {
-                                        // Intensity logic
-                                        const min = 69120;
-                                        const max = 140400;
+                                    {values[sIdx].map((val, vIdx) => {
+                                        // Intensity logic based on scenario
+                                        const min = values[0][4]; // Lowest value in matrix
+                                        const max = values[2][0]; // Highest value in matrix
                                         const percent = (val - min) / (max - min); 
                                         // On dark bg, we want opacity to range from barely visible to vibrant
                                         const opacity = 0.15 + (percent * 0.65); 

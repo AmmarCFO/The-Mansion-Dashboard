@@ -171,6 +171,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
       switch(id) {
           case 'study_a': return 'دراسة أ: الشقق';
           case 'study_b': return 'دراسة ب: سكن مشترك';
+          case 'study_c': return 'دراسة ج: سكن مشترك بلس';
           default: return id;
       }
   };
@@ -179,11 +180,23 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
     switch(id) {
         case 'study_a': return 'تحليل لـ ٢٥ وحدة تتكون من ٢٢ شقة غرفة نوم واحدة و ٣ شقق غرفتين نوم. الأسعار تعكس معدلات التأجير السنوي. استراتيجية النموذج: سكن تنفيذي فاخر - عقود بحد أدنى ٦ أشهر إلى ١٢ شهرًا - يُسمح بالدفعات الشهرية.';
         case 'study_b': return 'تحليل نموذج السكن المشترك لـ ٤٩ تاون هاوس. يحتوي كل تاون هاوس على ٣ غرف نوم ماستر تؤجر بشكل منفصل. إجمالي الوحدات التأجيرية: ١٤٧ غرفة. سعر الغرفة: ٣,٢٠٠ - ٣,٩٠٠ ريال شهرياً.';
+        case 'study_c': return 'استراتيجية العائد الأقصى بتحويل التاون هاوس إلى ٤ غرف (٣ ماستر + ١ غرفة مفردة). إجمالي المخزون: ١٩٦ غرفة. تسعير الغرفة المفردة ثابت ٢,٩٠٠ ريال شهرياً لكافة الحالات.';
         default: return '';
     }
   };
   
-  const translateUnitLabel = (id: string) => id === 'study_b' ? 'غرفة ماستر' : 'شقة';
+  const translateUnitLabel = (id: string) => {
+      if (id === 'study_b' || id === 'study_c') return 'غرفة';
+      return 'شقة';
+  };
+  
+  const translateUnitName = (name: string) => {
+      if (name === 'Master Room') return 'غرفة ماستر';
+      if (name === 'Single Room') return 'غرفة مفردة';
+      if (name === 'Master Room (Co-living)') return 'غرفة ماستر (سكن مشترك)';
+      return name;
+  };
+
   const translateDuration = (label: string) => {
       return 'تأجير سنوي';
   };
@@ -203,7 +216,8 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ];
   
   const handleOpenComparison = (studyId: string) => {
-      setComparisonStudyId(studyId);
+      const targetId = studyId === 'study_c' ? 'study_b' : studyId;
+      setComparisonStudyId(targetId);
       setComparisonModalOpen(true);
   };
 
@@ -214,7 +228,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
   ledgerItems.push({ category: 'صافي الدخل (المالك)', amount: effectiveNetIncome, color: 'bg-emerald-400', highlight: true });
 
   const isStudyA = activeScenarioId === 'study_a';
-  const isMonthlyPricing = activeScenarioId === 'study_b';
+  const isMonthlyPricing = ['study_b', 'study_c'].includes(activeScenarioId);
   const priceDivisor = isMonthlyPricing ? 12 : 1;
   const priceLabel = isMonthlyPricing ? '(شهري)' : '(سنوي)';
 
@@ -252,7 +266,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 >
                      <div className="absolute inset-0 bg-gradient-to-l from-[#8A6E99]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <span className="w-2 h-2 rounded-full bg-[#8A6E99]"></span>
-                    <span className="text-sm font-bold text-[#4A2C5A] relative z-10">مقارنات دراسة ب (تاون هاوس)</span>
+                    <span className="text-sm font-bold text-[#4A2C5A] relative z-10">مقارنات دراسة ب / ج</span>
                 </button>
             </div>
           </div>
@@ -380,7 +394,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                                                         {unit.name.charAt(0)}
                                                     </div>
                                                     <div>
-                                                        <p className="font-bold text-white text-sm">{unit.name}</p>
+                                                        <p className="font-bold text-white text-sm">{translateUnitName(unit.name)}</p>
                                                     </div>
                                                 </div>
                                                 <div className="text-left">
@@ -458,10 +472,10 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
                 </AnimatePresence>
             </div>
             
-            {/* Sensitivity Matrix for Study B */}
-            {activeScenarioId === 'study_b' && (
+            {/* Sensitivity Matrix for Study B and Study C */}
+            {(activeScenarioId === 'study_b' || activeScenarioId === 'study_c') && (
                 <div className="mt-8 sm:mt-12">
-                    <SensitivityMatrix lang="ar" />
+                    <SensitivityMatrix lang="ar" scenarioId={activeScenarioId} />
                 </div>
             )}
         </Section>
@@ -477,7 +491,7 @@ const App_ar: React.FC<{ onToggleLanguage: () => void }> = ({ onToggleLanguage }
       <ComparisonModal 
         isOpen={isComparisonModalOpen}
         onClose={() => setComparisonModalOpen(false)}
-        title={comparisonStudyId === 'study_a' ? 'مقارنات دراسة أ: الشقق' : 'مقارنات دراسة ب: سكن مشترك'}
+        title={comparisonStudyId === 'study_a' ? 'مقارنات دراسة أ: الشقق' : 'مقارنات دراسة ب/ج: تاون هاوس'}
         links={COMPARISON_LINKS[comparisonStudyId] || []}
       />
     </div>
